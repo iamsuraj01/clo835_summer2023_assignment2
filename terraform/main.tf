@@ -4,13 +4,13 @@ provider "aws" {
 
 resource "aws_instance" "app_server" {
   ami           = "ami-0cff7528ff583bf9a" # Amazon Linux 2 AMI
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name      = aws_key_pair.clo835_key_pair.key_name # Replace with your key pair name
 
   vpc_security_group_ids = [aws_security_group.allow_web.id]
 
   tags = {
-    Name = "CLO835-Assignment1-EC2"
+    Name = "CLO835-Assignment2-EC2"
   }
 
   user_data = <<-EOF
@@ -35,43 +35,56 @@ resource "aws_security_group" "allow_web" {
   description = "Allow inbound web traffic"
 
   ingress {
-    description = "HTTP"
+    description = "Allow HTTP"
     from_port   = 80
     to_port     = 80
-    protocol    = "TCP"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    description = "Custom TCP"
-    from_port   = 8081
-    to_port     = 8083
-    protocol    = "TCP"
+    description = "Allow HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    description = "SSH"
+    description = "Allow NodePort range for K8s"
+    from_port   = 30000
+    to_port     = 32767
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow SSH"
     from_port   = 22
     to_port     = 22
-    protocol    = "TCP"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "k8s_security_group"
+  }
 }
 
 resource "aws_ecr_repository" "webapp" {
-  name = "clo835-assignment1-webapp"
+  name = "clo835-assignment2-webapp"
 }
 
 resource "aws_ecr_repository" "mysql" {
-  name = "clo835-assignment1-mysql"
+  name = "clo835-assignment2-mysql"
 }
 
 output "instance_public_ip" {

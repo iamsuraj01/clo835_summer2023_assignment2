@@ -26,7 +26,7 @@ jobs:
       - name: Build and push webapp image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: clo835-assignment1-webapp
+          ECR_REPOSITORY: clo835-assignment2-webapp
         run: |
           # Build the web app image
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
@@ -36,7 +36,7 @@ jobs:
       - name: Build and push MySQL image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: clo835-assignment1-mysql
+          ECR_REPOSITORY: clo835-assignment2-mysql
         run: |
           # Build the MySQL image
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f Dockerfile_mysql .
