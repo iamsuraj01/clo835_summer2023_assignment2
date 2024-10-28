@@ -1,0 +1,44 @@
+name: Docker Build and Push
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: us-east-1
+
+      - name: Build and push webapp image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: clo835-assignment1-webapp
+        run: |
+          # Build the web app image
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          # Push the web app image with the latest tag
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Build and push MySQL image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: clo835-assignment1-mysql
+        run: |
+          # Build the MySQL image
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f Dockerfile_mysql .
+          # Push the MySQL image with the latest tag
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
