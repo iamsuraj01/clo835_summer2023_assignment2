@@ -7,16 +7,15 @@ metadata:
     app: mysql
 spec:
   containers:
-  - name: mysql
-    image: 903150814166.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment2-mysql:latest
-    ports:
-    - containerPort: 3306
-    env:
-    - name: MYSQL_ROOT_PASSWORD
-      valueFrom:
-        secretKeyRef:
-            name: mysql-secret
-            key: mysql-root-password
-      value: "employees"
+    - name: mysql
+      image: 903150814166.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment2-mysql:latest
+      ports:
+        - containerPort: 3306
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-root-password
   imagePullSecrets:
     - name: ecr-secret
