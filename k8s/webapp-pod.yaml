@@ -7,19 +7,21 @@ metadata:
     app: employees
 spec:
   containers:
-  - name: webapp
-    image: 903150814166.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment2-webapp:latest
-    ports:
-    - containerPort: 8080
-    env:
-    - name: DBHOST
-      value: "mysql-service.mysql.svc.cluster.local"
-    - name: DBPORT
-      value: "3306"
-    - name: DBUSER
-      value: "root"
-    - name: DBPWD
-      value: "password123"
+    - name: webapp
+      image: 903150814166.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment2-webapp:latest
+      ports:
+        - containerPort: 8080
+      env:
+        - name: DBHOST
+          value: "mysql-service.mysql.svc.cluster.local"
+        - name: DBPORT
+          value: "3306"
+        - name: DBUSER
+          value: "root"
+        - name: DBPWD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-root-password
   imagePullSecrets:
     - name: ecr-secret
-    

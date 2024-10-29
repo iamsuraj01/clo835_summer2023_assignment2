@@ -26,6 +26,9 @@ spec:
         - name: DBUSER
           value: "root"
         - name: DBPWD
-          value: "password123"
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-root-password
       imagePullSecrets:
         - name: ecr-secret
