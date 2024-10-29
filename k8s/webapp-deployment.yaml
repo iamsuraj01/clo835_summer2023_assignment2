@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: 903150814166.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment2-webapp:latest
+        image: 903150814166.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment2-webapp:v2
         ports:
         - containerPort: 8080
         env:
@@ -25,6 +25,8 @@ spec:
           value: "3306"
         - name: DBUSER
           value: "root"
+        - name: DATABASE
+          value: "employees"
         - name: DBPWD
           valueFrom:
             secretKeyRef:
